@@ -6,44 +6,44 @@
 
 <style>
 body {
-    background: radial-gradient(circle, #1b1b1b, #000);
-    font-family: Georgia, serif;
+    background: #000;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 .calculator {
-    background: #0d0d0d;
-    border: 3px solid #f5c542;
-    width: 280px;
+    width: 260px;
     padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 0 25px #f5c542;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #000, #111);
+    box-shadow: 0 0 20px #f5c542;
+    border: 3px solid #f5c542;
 }
 
 #display {
-    width: 100%;
-    height: 70px;
+    height: 60px;
     background: black;
     color: #f5c542;
-    font-size: 18px;
+    font-size: 20px;
+    text-align: right;
+    padding: 10px;
+    border-radius: 8px;
     border: 2px solid #f5c542;
-    border-radius: 6px;
-    padding: 8px;
-    box-sizing: border-box;
+    margin-bottom: 15px;
+    overflow: hidden;
 }
 
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-top: 12px;
+    gap: 10px;
 }
 
 button {
-    height: 50px;
+    height: 45px;
     font-size: 18px;
     background: black;
     color: #f5c542;
@@ -57,15 +57,8 @@ button:hover {
     color: black;
 }
 
-.operator {
-    color: #ff6b6b;
-}
-
 .equal {
     grid-column: span 2;
-    background: #f5c542;
-    color: black;
-    font-weight: bold;
 }
 </style>
 </head>
@@ -73,67 +66,62 @@ button:hover {
 <body>
 
 <div class="calculator">
-    <textarea id="display" readonly>I am your personal calculator</textarea>
+    <div id="display">I am your personal calculator</div>
 
     <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="add('/')">÷</button>
-        <button onclick="add('*')">×</button>
-        <button onclick="add('-')">−</button>
-
         <button onclick="add('7')">7</button>
         <button onclick="add('8')">8</button>
         <button onclick="add('9')">9</button>
-        <button onclick="add('+')">+</button>
+        <button onclick="add('/')">÷</button>
 
         <button onclick="add('4')">4</button>
         <button onclick="add('5')">5</button>
         <button onclick="add('6')">6</button>
-        <button onclick="add('.')">.</button>
+        <button onclick="add('*')">×</button>
 
         <button onclick="add('1')">1</button>
         <button onclick="add('2')">2</button>
         <button onclick="add('3')">3</button>
-        <button class="equal" onclick="calculate()">=</button>
+        <button onclick="add('-')">−</button>
 
         <button onclick="add('0')">0</button>
+        <button onclick="clearDisplay()">C</button>
+        <button class="equal" onclick="calculate()">=</button>
+        <button onclick="add('+')">+</button>
     </div>
 </div>
 
 <script>
-let display = document.getElementById("display");
+const display = document.getElementById("display");
+let busy = false;
 
-function add(value) {
-    if (display.value.includes("Initializing") || 
-        display.value.includes("Updating") || 
-        display.value.includes("Completed") || 
-        display.value.includes("Answering")) {
-        return;
+function add(val) {
+    if (busy) return;
+    if (display.innerText === "I am your personal calculator") {
+        display.innerText = "";
     }
-    display.value += value;
+    display.innerText += val;
 }
 
 function clearDisplay() {
-    display.value = "";
+    if (busy) return;
+    display.innerText = "";
 }
 
 function calculate() {
-    display.value = "Initializing...";
-    setTimeout(() => {
-        display.value = "Updating...";
-    }, 2000);
+    if (busy) return;
+    busy = true;
+
+    display.innerText = "Initializing...";
+    setTimeout(() => display.innerText = "Updating...", 2000);
+    setTimeout(() => display.innerText = "Completed...", 4000);
+    setTimeout(() => display.innerText = "Answering...", 6000);
 
     setTimeout(() => {
-        display.value = "Completed...";
-    }, 4000);
-
-    setTimeout(() => {
-        display.value = "Answering...";
-    }, 6000);
-
-    setTimeout(() => {
-        display.value = Math.floor(Math.random() * 999) +
-        "\n\nAapki khubsoorti dekhne k baad mai process nhi kr pa rha💫💫";
+        display.innerText =
+            Math.floor(Math.random() * 100) +
+            "\nAapki khubsoorti dekhne k baad mai process nhi kr pa rha";
+        busy = false;
     }, 8000);
 }
 </script>
