@@ -5,135 +5,137 @@
 <title>Magic Calculator</title>
 
 <style>
-    body {
-        background: radial-gradient(circle, #1b1b1b, #000);
-        font-family: 'Georgia', serif;
-        color: #f5c542;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+body {
+    background: radial-gradient(circle, #1b1b1b, #000);
+    font-family: Georgia, serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    .calculator {
-        background: #111;
-        border: 3px solid #f5c542;
-        padding: 20px;
-        width: 260px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px #f5c542;
-        display: none;
-    }
+.calculator {
+    background: #0d0d0d;
+    border: 3px solid #f5c542;
+    width: 280px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px #f5c542;
+}
 
-    input {
-        width: 100%;
-        height: 50px;
-        font-size: 20px;
-        margin-bottom: 10px;
-        text-align: right;
-        background: black;
-        color: #f5c542;
-        border: 2px solid #f5c542;
-        border-radius: 5px;
-    }
+#display {
+    width: 100%;
+    height: 70px;
+    background: black;
+    color: #f5c542;
+    font-size: 18px;
+    border: 2px solid #f5c542;
+    border-radius: 6px;
+    padding: 8px;
+    box-sizing: border-box;
+}
 
-    button {
-        width: 23%;
-        height: 45px;
-        margin: 1%;
-        font-size: 18px;
-        background: black;
-        color: #f5c542;
-        border: 2px solid #f5c542;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
 
-    button:hover {
-        background: #f5c542;
-        color: black;
-    }
+button {
+    height: 50px;
+    font-size: 18px;
+    background: black;
+    color: #f5c542;
+    border: 2px solid #f5c542;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    #status {
-        margin-top: 10px;
-        text-align: center;
-        font-style: italic;
-        color: #fff;
-    }
+button:hover {
+    background: #f5c542;
+    color: black;
+}
+
+.operator {
+    color: #ff6b6b;
+}
+
+.equal {
+    grid-column: span 2;
+    background: #f5c542;
+    color: black;
+    font-weight: bold;
+}
 </style>
 </head>
 
 <body>
 
-<div class="calculator" id="calc">
-    <input type="text" id="display" readonly>
+<div class="calculator">
+    <textarea id="display" readonly>I am your personal calculator</textarea>
 
-    <div>
+    <div class="buttons">
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="add('/')">÷</button>
+        <button onclick="add('*')">×</button>
+        <button onclick="add('-')">−</button>
+
         <button onclick="add('7')">7</button>
         <button onclick="add('8')">8</button>
         <button onclick="add('9')">9</button>
-        <button onclick="add('/')">÷</button>
-    </div>
-    <div>
+        <button onclick="add('+')">+</button>
+
         <button onclick="add('4')">4</button>
         <button onclick="add('5')">5</button>
         <button onclick="add('6')">6</button>
-        <button onclick="add('*')">×</button>
-    </div>
-    <div>
+        <button onclick="add('.')">.</button>
+
         <button onclick="add('1')">1</button>
         <button onclick="add('2')">2</button>
         <button onclick="add('3')">3</button>
-        <button onclick="add('-')">−</button>
-    </div>
-    <div>
-        <button onclick="add('0')">0</button>
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="add('+')">+</button>
-    </div>
+        <button class="equal" onclick="calculate()">=</button>
 
-    <div id="status"></div>
+        <button onclick="add('0')">0</button>
+    </div>
 </div>
 
 <script>
-    alert("I am your personal calculator");
+let display = document.getElementById("display");
 
-    document.getElementById("calc").style.display = "block";
-
-    function add(value) {
-        document.getElementById("display").value += value;
+function add(value) {
+    if (display.value.includes("Initializing") || 
+        display.value.includes("Updating") || 
+        display.value.includes("Completed") || 
+        display.value.includes("Answering")) {
+        return;
     }
+    display.value += value;
+}
 
-    function clearDisplay() {
-        document.getElementById("display").value = "";
-        document.getElementById("status").innerText = "";
-    }
+function clearDisplay() {
+    display.value = "";
+}
 
-    function calculate() {
-        const status = document.getElementById("status");
-        const display = document.getElementById("display");
+function calculate() {
+    display.value = "Initializing...";
+    setTimeout(() => {
+        display.value = "Updating...";
+    }, 2000);
 
-        status.innerText = "Initializing...";
-        setTimeout(() => {
-            status.innerText = "Updating...";
-        }, 1000);
+    setTimeout(() => {
+        display.value = "Completed...";
+    }, 4000);
 
-        setTimeout(() => {
-            status.innerText = "Completed...";
-        }, 2000);
+    setTimeout(() => {
+        display.value = "Answering...";
+    }, 6000);
 
-        setTimeout(() => {
-            status.innerText = "Answering...";
-        }, 3000);
-
-        setTimeout(() => {
-            // Always wrong answer 😈
-            display.value = Math.floor(Math.random() * 999);
-            alert("Aapki khubsoorti dekhne k baad mai process nhi kr pa rha");
-            status.innerText = "";
-        }, 4000);
-    }
+    setTimeout(() => {
+        display.value = Math.floor(Math.random() * 999) +
+        "\n\nAapki khubsoorti dekhne k baad mai process nhi kr pa rha💫💫";
+    }, 8000);
+}
 </script>
 
 </body>
